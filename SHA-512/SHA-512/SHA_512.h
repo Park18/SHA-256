@@ -1,4 +1,8 @@
 #pragma once
+/**
+ * @file SHA_512.h
+ * @brief SHA-2의 512를 구현하는 헤더
+ */
 #ifndef SHA_512_H
 #define SHA_512_H
 
@@ -41,11 +45,21 @@ const unsigned __int64 constantK[80] = {
 	0x4cc5d4becb3e42b6, 0x597f299cfc657e2a, 0x5fcb6fab3ad6faec, 0x6c44198c4a475817
 };
 
+#define MAJORITY(X, Y, Z) ((X & Y) ^ (Y & Z) ^ (Z & X))	// 라운드 하위 Majority 함수
+#define CONDITIONAL(X, Y, Z) ((X & Y) ^ (~X & Z))		// 라운드 하위 Conditional 함수
+#define ROTATE_0(X) ((X >> 14) ^ (X >> 18) ^ (X >> 41))	// 라운드 하위 로테이션 함수 A연산 때 사용
+#define ROTATE_1(X) ((X >> 28) ^ (X >> 34) ^ (X >> 39))	// 라운드 하위 로테이션 함수 E연산 때 사용
+
+
+/**
+ * @brief SHA-512 클래스
+ */
 class SHA_512
 {
 private:
-	std::string inputMessage;
-	int messageLength;
+	std::string inputMessage;	// 입력 메시지를 저장하는 변수
+	int messageLength;			// 입력 메시지의 길이를 저장하는 변수
+	int pos;					// 다음 위치를 저장하는 변수
 
 	unsigned char messageBlock[1024];
 	uint64_t w[80];
@@ -55,28 +69,39 @@ public:
 	//--------------------------------------------------//
 	//                  SHA-512 관련 함수                //
 	//--------------------------------------------------//
-	// 패딩
+
+	/**
+	 * @brief 메시지를 패딩시키는 메소드
+	 * @param
+	 */
 	void padding(char* message);
 
-	// 확장 함수
+	/**
+	 * @brief 확장함수를 담당하는 메소드
+	 */
 	void compressionFunction();
 
-	// 라운드 함수
+	/**
+	 * @brief 라운드를 담당하는 메소드
+	 */
 	void round();
 
-	// 라운드 함수의 하위 함수로, w를 구하는 함수
+	/**
+	 * @brief 라운드 함수의 W_i를 구하는 메소드
+	 */
 	void setW();
 
+	/*
 	// 라운드 하위 Majority 함수
 	uint64_t majority(uint64_t x, uint64_t y, uint64_t z);
 
 	// 라운드 하위 로테이션 함수
 	uint64_t rotateA(uint64_t a);
-
 	uint64_t rotateE(uint64_t e);
 
 	// 라운드 하위 Conditional 함수
 	uint64_t conditional(uint64_t x, uint64_t y, uint64_t z);
+	 */
 
 };
 
