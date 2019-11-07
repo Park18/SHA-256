@@ -22,7 +22,7 @@ const unsigned __int64 initialHash[8] = {
 };
 
 // 상수 K
-const unsigned __int64 constantK[80] = {
+const uint64_t constantK[80] = {
 	0x428a2f98d728ae22, 0x7137449123ef65cd, 0xb5c0fbcfec4d3b2f, 0xe9b5dba58189dbbc,
 	0x3956c25bf348b538, 0x59f111f1b605d019, 0x923f82a4af194f9b, 0xab1c5ed5da6d8118,
 	0xd807aa98a3030242, 0x12835b0145706fbe, 0x243185be4ee4b28c, 0x550c7dc3d5ffb4e2,
@@ -57,13 +57,15 @@ const unsigned __int64 constantK[80] = {
 class SHA_512
 {
 private:
-	std::string inputMessage;	// 입력 메시지를 저장하는 변수
-	int messageLength;			// 입력 메시지의 길이를 저장하는 변수
-	int pos;					// 다음 위치를 저장하는 변수
+	std::string message;	// 입력 메시지를 저장하는 변수
+	int messageLength;		// 입력 메시지의 길이를 저장하는 변수
+	int pos;				// 다음 위치를 저장하는 변수
 
-	unsigned char messageBlock[1024];
-	uint64_t w[80];
+	uint8_t message_block[128];	// 패딩된 메시지가 들어갈 문자열 (1024 bits = 1byte)
+	//W_i w_i[80];				// 라운드 함수에 필요한 w_i를 저장하는 변수
 public:
+	
+
 	void input();
 
 	//--------------------------------------------------//
@@ -74,12 +76,12 @@ public:
 	 * @brief 메시지를 패딩시키는 메소드
 	 * @param
 	 */
-	void padding(char* message);
+	void padding();
 
 	/**
 	 * @brief 확장함수를 담당하는 메소드
 	 */
-	void compressionFunction();
+	void compression_function();
 
 	/**
 	 * @brief 라운드를 담당하는 메소드
@@ -89,20 +91,7 @@ public:
 	/**
 	 * @brief 라운드 함수의 W_i를 구하는 메소드
 	 */
-	void setW();
-
-	/*
-	// 라운드 하위 Majority 함수
-	uint64_t majority(uint64_t x, uint64_t y, uint64_t z);
-
-	// 라운드 하위 로테이션 함수
-	uint64_t rotateA(uint64_t a);
-	uint64_t rotateE(uint64_t e);
-
-	// 라운드 하위 Conditional 함수
-	uint64_t conditional(uint64_t x, uint64_t y, uint64_t z);
-	 */
-
+	void set_W();
 };
 
 #endif // !SHA_512_H

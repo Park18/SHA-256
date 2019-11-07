@@ -21,9 +21,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SHA_512.cpp" />
+    <ClCompile Include="Wt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SHA_512.h" />
+    <ClInclude Include="Wt.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
