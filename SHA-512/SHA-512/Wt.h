@@ -21,6 +21,7 @@ private:
 
 public:
 	Wt() { set_ptr_Wt(new uint64_t[80]); }
+	~Wt() { delete get_ptr_Wt(); }
 
 	/**
 	 * @brief	set/get
@@ -58,3 +59,10 @@ public:
 
 #endif // !Wt_h
 
+/* 참고 사이트
+ * https://docs.microsoft.com/ko-kr/cpp/c-runtime-library/reference/rotl-rotl64-rotr-rotr64?view=vs-2019
+ * https://csrc.nist.gov/csrc/media/publications/fips/180/4/final/documents/fips180-4-draft-aug2014.pdf
+ * https://blog.naver.com/tpinlab/10121820313
+ * https://m.blog.naver.com/PostView.nhn?blogId=vjhh0712v&logNo=221453210356&proxyReferer=https%3A%2F%2Fwww.google.com%2F
+ * https://medium.com/sunhyoups-story/doxygen-%EC%82%AC%EC%9A%A9-%EA%B0%80%EC%9D%B4%EB%93%9C-e6cf5a1b24e9 (doxygen 키워드 정리)
+ */

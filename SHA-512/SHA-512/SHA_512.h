@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include <string>
+#include <algorithm>
+#include "Wt.h"
 
 #define MESSAGE_BLOCK_MAX_SIZE 128	// SHA-512 길이 한계 값
 #define ROUND_SIZE 80				// 라운드 크기
@@ -47,9 +49,8 @@ const uint64_t constantK[80] = {
 
 #define MAJORITY(X, Y, Z) ((X & Y) ^ (Y & Z) ^ (Z & X))	// 라운드 하위 Majority 함수
 #define CONDITIONAL(X, Y, Z) ((X & Y) ^ (~X & Z))		// 라운드 하위 Conditional 함수
-#define ROTATE_0(X) ((X >> 14) ^ (X >> 18) ^ (X >> 41))	// 라운드 하위 로테이션 함수 A연산 때 사용
-#define ROTATE_1(X) ((X >> 28) ^ (X >> 34) ^ (X >> 39))	// 라운드 하위 로테이션 함수 E연산 때 사용
-
+#define ROTATE_0(X) (ROTR(X, 14) ^ ROTR(X, 18) ^ ROTR(X, 41))	// 라운드 하위 로테이션 함수 A연산 때 사용
+#define ROTATE_1(X) (ROTR(X, 28) ^ ROTR(X, 34) ^ ROTR(X, 39))	// 라운드 하위 로테이션 함수 E연산 때 사용
 
 /**
  * @brief SHA-512 클래스
@@ -58,12 +59,23 @@ class SHA_512
 {
 private:
 	std::string message;	// 입력 메시지를 저장하는 변수
-	int messageLength;		// 입력 메시지의 길이를 저장하는 변수
-	int pos;				// 다음 위치를 저장하는 변수
+	int message_byte_size;	// 입력 메시지의 바이트의 크기를 저장하는 변수 // 바이크 크기 * 8 = 비트 개수
+	int pos;				// 패딩을 시작할 위치를 저장하는 변수
 
-	uint8_t message_block[128];	// 패딩된 메시지가 들어갈 문자열 (1024 bits = 1byte)
-	//W_i w_i[80];				// 라운드 함수에 필요한 w_i를 저장하는 변수
+	uint8_t message_block[128];	// 패딩된 메시지가 들어갈 문자열 (1024 bits = 128byte)
+	Wt wt;						// 라운드 함수에서 사용되는 Wt를 저장한 객체 변수
 public:
+	SHA_512() { set_message(""); set_message_byte_size(0); set_pos(0); }
+
+	void set_message(std::string message) { this->message = message; }
+	void set_message_byte_size(int message_byte_size) { this->message_byte_size = message_byte_size; }
+	void set_pos(int pos) { this->pos = pos; }
+
+	std::string get_message() { return message; }
+	std::string* get_ptr_message() { return &message; }
+	int get_message_byte_size() { return message_byte_size; }
+	int get_pos() { return pos; }
+	
 	
 
 	void input();
@@ -75,6 +87,7 @@ public:
 	/**
 	 * @brief 메시지를 패딩시키는 메소드
 	 * @param
+	 * @date 19.11.08
 	 */
 	void padding();
 
@@ -88,10 +101,6 @@ public:
 	 */
 	void round();
 
-	/**
-	 * @brief 라운드 함수의 W_i를 구하는 메소드
-	 */
-	void set_W();
 };
 
 #endif // !SHA_512_H

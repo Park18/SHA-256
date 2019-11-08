@@ -36,7 +36,7 @@ uint64_t Wt::get_value64(uint8_t* message_block, int start_pos)
 	for (int message_index = start_pos; message_index < start_pos + 8; message_index++)
 	{
 		tmp_value64 = message_block[message_index];
-		for (int shift_count = start_pos + 8; shift_count > message_index; shift_count--)
+		for (int shift_count = start_pos + 7; shift_count > message_index; shift_count--)
 		{
 			tmp_value64 <<= 8;
 		}
