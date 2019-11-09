@@ -15,21 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SHA_512.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Wt.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="SHA_256.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SHA_512.h">
+    <ClInclude Include="Wt.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Wt.h">
+    <ClInclude Include="SHA_256.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

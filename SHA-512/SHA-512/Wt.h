@@ -4,56 +4,75 @@
 
 #include <iostream>
 
-#define MAX_T_SIZE 80
+#define MAX_T_SIZE 64
+
+#define ROTR(value, shift) _rotr(value, shift)				// 로테이션 매크로
+#define SIGMA_0(x) (ROTR(x, 7) ^ ROTR(x, 18) ^ (x >> 3))	// 시그마0 매크로
+#define SIGMA_1(x) (ROTR(x, 17) ^ ROTR(x, 19) ^ (x >> 10))	// 시그마1 매크로
 
 /**
  * @class	Wt
  * @date	2019/11/07
  * @author	박현우
- * @brief	SHA-2의 Wt를 위한 클래스v
- * @details	SHA-2 알고리즘의 라운드 함수의 Wt를 관리하는 클래스
+ * @brief	SHA-2의 Wt를 위한 클래스
+ * @details	SHA-2(256) 알고리즘의 라운드 함수의 Wt를 관리하는 클래스
  */
 class Wt
 {
 private:
-	uint64_t* ptr_Wt;
-	//uint8_t _Wt[80][8];	// W0 ~ W79(80개), Wt의 크기는 64bits(8bites * 8개)
+	uint32_t* ptr_Wt;
+
+	/**
+	 * @brief	ptr_Wt set 메소드
+	 * @detail	객체 생성시 한번 사용하고 사용하지 않는다.
+	 */
+	void set_ptr_Wt(uint32_t* ptr_Wt) { this->ptr_Wt = ptr_Wt; }
+
+	/**
+	 * @brief	ptr_Wt get 메소드
+	 * @return	ptr_Wt이 저장한 주소 값
+	 * @detail	필요 없는거 같다.
+	 */
+	uint32_t* get_ptr_Wt() { return ptr_Wt; }
 
 public:
-	Wt() { set_ptr_Wt(new uint64_t[80]); }
+	/**
+	 * @bridef	Wt클래스의 생성자
+	 * @detail	t의 최대크기(64)만큼의 동적 메모리 할당한다.
+	 */
+	Wt() { set_ptr_Wt(new uint32_t[MAX_T_SIZE]); }
+
+	/**
+	 * @bridef	Wt클래스의 소멸자
+	 * @detail	동적 메모리 할당받은 것을 해제한다.
+	 */
 	~Wt() { delete get_ptr_Wt(); }
 
 	/**
-	 * @brief	set/get
-	 */
-	void set_ptr_Wt(uint64_t* ptr_Wt) { this->ptr_Wt = ptr_Wt; }
-	uint64_t* get_ptr_Wt() { return ptr_Wt; }
-
-	/**
 	 * @brief	Wt를 설정하는 메소드
-	 * @param	items: Wt에 들어갈 값을 저장한 uint8_t[128] 배열 포인터
-	 * @detail	라운드 함수에 사용되는 모든 Wt를 배열에 저장한다. 
+	 * @param	padding_block: 압축 함수에서 입력되는 패딩된 메시지 블럭(512비트)
+	 * @detail	압축 함수에 사용되는 모든 Wt를 배열에 저장한다. 
 	 */
-	void set_Wt(uint8_t* message_block);
+	void set_Wt(uint8_t* padding_block);
 
 	/**
-	 * @brief	Wt의 값을 가진 배열 포인터를 반환하는 메소드
+	 * @brief	Wt의 값을 반환하는 메소드
 	 * @param	t: W의 순서
-	 * @return	Wt의 값을 가진 배열 포인터
+	 * @return	W(t)의 값
 	 */
-	uint64_t get_Wt(int t) { return get_ptr_Wt()[t]; }
+	uint32_t get_Wt(int round_count) { return get_ptr_Wt()[round_count]; }
 
 	/**
-	 * @brief	배열에 저장된 이진수를 10진수로 변환
-	 * @param	- message_block: 1024bits 메시지 블럭(uint8_t[128])
-	 *			- start_pos: 1024bits 메시지 블럭에서 읽어야할 위치
-	 * @return	변환된 64비트의 10진수
-	 * @detail	패딩된 메시지에서 uint8_t[8]만큼의 저장된 값을
-	 *			uint64_t로 변환하여 반환하는 메소드
-	 *			uint8_t[8] -> uint64_t
+	 * @brief	uint8_t 배열을 받아 uint32_t 값으로 반환하는 
+	 * @param	- message_block: 512bits 메시지 블럭(uint8_t[MAX_T_SIZE])
+	 *			- start_pos: 512bits 메시지 블럭에서 읽어야할 위치
+	 * @return	변환된 32비트 값
+	 * @detail	패딩된 메시지에서 uint8_t[4]만큼의 저장된 값을
+	 *			uint32_t로 변환하여 반환하는 메소드
+	 *			uint8_t[4] -> uint32_t
 	 *			Wt에서 (0 <= t <= 15)의 값을 얻을 때 사용
 	 */
-	uint64_t get_value64(uint8_t* message_block, int start_pos);
+	uint32_t get_value32(uint8_t* message_block, int start_pos);
 };
 
 

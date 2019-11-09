@@ -1,11 +1,16 @@
 #include <iostream>
 #include <bitset>
-#include "SHA_512.h"
+#include "SHA_256.h"
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
-	uint8_t num = 128;
-	cout << bitset<8>(num) << endl;
+	SHA_256 sha_256;
+	sha_256.sha_256();
+
+	uint32_t* hash = sha_256.get_ptr_hash();
+	for (int index = 0; index < 8; index++)
+		cout << std::hex << hash[index] << " ";
+
 }
