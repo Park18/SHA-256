@@ -1,5 +1,7 @@
 #include "Wt.h"
 
+using namespace std;
+
 void Wt::set_Wt(uint8_t* message_block)
 {
 	for (int t = 0; t < MAX_T_SIZE; t++)
@@ -17,6 +19,14 @@ void Wt::set_Wt(uint8_t* message_block)
 			SIGMA_1(get_ptr_Wt()[t - 2]);
 		}
 	}
+
+	/*
+	 * @bug_find
+	 */
+	cout << "----------------------Wt----------------------" << endl;
+	for (int index = 0; index < MAX_T_SIZE; index++)
+		cout << "W" << index << " : " << get_Wt(index) << endl;
+	cout << "----------------------Wt----------------------" << endl;
 }
 
 // Wt에서 (0 <= t <= 15)의 값을 얻을 때 사용하는 메소드

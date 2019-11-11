@@ -10,6 +10,8 @@ void SHA_256::set_initial_hash()
 
 void SHA_256::input()
 {
+	cout << "평문 입력 : ";
+
 	string str;
 	getline(cin, str);
 	set_message(str);
@@ -67,8 +69,11 @@ void SHA_256::compression_function(uint8_t* padding_block)
 {
 	set_Wt(padding_block);
 
-	for (int round_count = 0; round_count < 64; round_count++)
+	for (int round_count = 0; round_count < ROUND_SIZE; round_count++)
 	{
+		/*
+		 * @bug_find
+		 */
 		cout <<"round : "<< round_count << endl;
 		round(round_count);
 		cout << "round : " << round_count << endl;
@@ -87,12 +92,13 @@ void SHA_256::round(int round_count)
 	uint32_t copy_hash[8];
 	copy(this->hash, this->hash+8, copy_hash);
 
-	cout << std::oct << "----------" << round_count << "----------" << endl;;
+	/*
+	 * @bug_find
+	 */
+	cout << std::oct << "----------" << round_count << "----------" << endl;
 	for (int index = 0; index < 8; index++)
 		cout << std::hex << copy_hash[index] << endl;
-	cout << std::oct << "----------" << round_count << "----------" << endl;;
-	/*
-	*/
+	cout << std::oct << "----------" << round_count << "----------" << endl;
 
 	uint32_t mixer1_value = MAJORITY(copy_hash[0], copy_hash[1], copy_hash[2]) + ROTATE_0(copy_hash[0]);
 	uint32_t mixer2_value = CONDITIONAL(copy_hash[4], copy_hash[5], copy_hash[6]) + ROTATE_1(copy_hash[4]) +
@@ -139,6 +145,14 @@ void SHA_256::sha_256()
 		int padding_start_pos = count * PADDING_BLOCK_BYTE_SIZE;
 		int padding_last_pos = (count + 1) * PADDING_BLOCK_BYTE_SIZE;
 		copy(get_ptr_message_padding() + padding_start_pos, get_ptr_message_padding() + padding_last_pos, get_ptr_padding_block());
+
+		/*
+		 * @bug_find
+		 */
+		cout << "----------------------padding_block----------------------" << endl;
+		for (int index = 0; index < PADDING_BLOCK_BYTE_SIZE; index++)
+			cout << index << " : " << (int)get_ptr_padding_block()[index] << endl;
+		cout << "----------------------padding_block----------------------" << endl;
 
 		compression_function(get_ptr_padding_block());
 	}
