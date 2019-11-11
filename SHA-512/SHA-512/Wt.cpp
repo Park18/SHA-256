@@ -1,4 +1,5 @@
 #include "Wt.h"
+#include <bitset>
 
 using namespace std;
 
@@ -8,7 +9,7 @@ void Wt::set_Wt(uint8_t* message_block)
 	{
 		if (t >= 0 && t <= 15)
 		{
-			get_ptr_Wt()[t] = get_value32(message_block, t * 8);
+			get_ptr_Wt()[t] = get_value32(message_block, t * 4);
 		}
 
 		else
@@ -22,11 +23,12 @@ void Wt::set_Wt(uint8_t* message_block)
 
 	/*
 	 * @bug_find
-	 */
 	cout << "----------------------Wt----------------------" << endl;
 	for (int index = 0; index < MAX_T_SIZE; index++)
-		cout << "W" << index << " : " << get_Wt(index) << endl;
+		cout << "W" << index << " : " << bitset<32>(get_Wt(index)) <<", "<<get_Wt(index)<< endl;
+		//cout << "W" << index << " : " << get_Wt(index) << endl;
 	cout << "----------------------Wt----------------------" << endl;
+	 */
 }
 
 // Wt에서 (0 <= t <= 15)의 값을 얻을 때 사용하는 메소드

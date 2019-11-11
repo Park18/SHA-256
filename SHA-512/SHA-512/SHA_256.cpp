@@ -46,7 +46,7 @@ void SHA_256::padding()
 		// 패딩 3단계, 나머지 64비트에 메시지 길이를 채운다.
 		// 시작위치(start_pos)는 끝에서 부터 64비트(8바이트) 이므로 패딩 블럭 크기(512비트(64바이트) - 64비트(8바이트)
 		int start_pos = padding_byte_size * PADDING_BLOCK_BYTE_SIZE - PADDING_INPUT_BIYTE_SIZSE;
-		for (int length_index = start_pos; length_index < start_pos + PADDING_INPUT_BIYTE_SIZSE - 1; length_index++)
+		for (int length_index = start_pos; length_index <= start_pos + PADDING_INPUT_BIYTE_SIZSE - 1; length_index++)
 		{
 			// 64비트의 변수에 메시지의 길이를 넣는다.
 			uint64_t tmp_value64 = (uint64_t)get_message_byte_size() * 8;
@@ -74,9 +74,9 @@ void SHA_256::compression_function(uint8_t* padding_block)
 		/*
 		 * @bug_find
 		 */
-		cout <<"round : "<< round_count << endl;
+		//cout <<"round : "<< round_count << endl;
 		round(round_count);
-		cout << "round : " << round_count << endl;
+		//cout << "round : " << round_count << endl;
 	}
 	
 	for (int index = 0; index < 8; index++)
@@ -94,11 +94,11 @@ void SHA_256::round(int round_count)
 
 	/*
 	 * @bug_find
-	 */
 	cout << std::oct << "----------" << round_count << "----------" << endl;
 	for (int index = 0; index < 8; index++)
 		cout << std::hex << copy_hash[index] << endl;
 	cout << std::oct << "----------" << round_count << "----------" << endl;
+	 */
 
 	uint32_t mixer1_value = MAJORITY(copy_hash[0], copy_hash[1], copy_hash[2]) + ROTATE_0(copy_hash[0]);
 	uint32_t mixer2_value = CONDITIONAL(copy_hash[4], copy_hash[5], copy_hash[6]) + ROTATE_1(copy_hash[4]) +
@@ -145,14 +145,6 @@ void SHA_256::sha_256()
 		int padding_start_pos = count * PADDING_BLOCK_BYTE_SIZE;
 		int padding_last_pos = (count + 1) * PADDING_BLOCK_BYTE_SIZE;
 		copy(get_ptr_message_padding() + padding_start_pos, get_ptr_message_padding() + padding_last_pos, get_ptr_padding_block());
-
-		/*
-		 * @bug_find
-		 */
-		cout << "----------------------padding_block----------------------" << endl;
-		for (int index = 0; index < PADDING_BLOCK_BYTE_SIZE; index++)
-			cout << index << " : " << (int)get_ptr_padding_block()[index] << endl;
-		cout << "----------------------padding_block----------------------" << endl;
 
 		compression_function(get_ptr_padding_block());
 	}
